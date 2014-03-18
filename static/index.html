@@ -276,7 +276,6 @@ function wsSetup() {
     socket.onmessage = function(msg) {  
         try {
             debug("WebSocket Recv:" + msg.data);
-            console.log(event.data);
             var new_world = JSON.parse(msg.data)
             for(var entity in new_world) {
                 world[entity] = new_world[entity];

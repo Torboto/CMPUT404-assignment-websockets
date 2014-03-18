@@ -99,8 +99,13 @@ def read_ws(ws,client):
 
         if message is not None:
             world_changes = json.loads(message)
-            for entity in world_changes:
-                myWorld.set(entity, world_changes[entity])
+            if world_changes == "new socket":
+                ws.send(json.dumps(myWorld.world()))
+            else:
+                for entity in world_changes:
+                    print entity
+                    print world_changes[entity]
+                    myWorld.set(entity, world_changes[entity])
 
 @sockets.route('/subscribe')
 def subscribe_socket(ws):
@@ -109,13 +114,13 @@ def subscribe_socket(ws):
     client = Client()
     clients.append(client)
     thread = gevent.spawn(read_ws, ws, client)
-    while True:
-        try:
-            message = client.get()
-            ws.send(message)
-        finally:
-            clients.remove(client)
-            gevent.kill(thread)
+    try:
+        while True:
+                message = client.get()
+                ws.send(message)
+    finally:
+        clients.remove(client)
+        gevent.kill(thread)
 
 def flask_post_json():
     '''Ah the joys of frameworks! They do so much work for you

@@ -103,8 +103,6 @@ def read_ws(ws,client):
                 ws.send(json.dumps(myWorld.world()))
             else:
                 for entity in world_changes:
-                    print entity
-                    print world_changes[entity]
                     myWorld.set(entity, world_changes[entity])
 
 @sockets.route('/subscribe')
